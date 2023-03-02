@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/nazwa_bazy_danych
+    url: jdbc:postgresql://localhost:54321/order_automation
     driver-class-name: org.postgresql.Driver
-    username: nazwa_u?ytkownika
-    password: has?o_u?ytkownika
+    username: root
+    password: somePassword
 
   jpa:
     hibernate:
@@ -11,3 +11,4 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
