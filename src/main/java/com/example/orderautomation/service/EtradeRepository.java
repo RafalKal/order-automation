@@ -1,9 +1,9 @@
 package com.example.orderautomation.service;
 
-import com.example.orderautomation.model.order.EtradeOrderProductCatalog;
 import com.example.orderautomation.model.order.EtradeOrderProduct;
-import com.example.orderautomation.model.products.ProductCatalog;
-import com.example.orderautomation.model.products.Product;
+import com.example.orderautomation.model.order.EtradeOrderProductCatalog;
+import com.example.orderautomation.model.order.EtradeProduct;
+import com.example.orderautomation.model.order.EtradeProductCatalog;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
@@ -14,16 +14,12 @@ import java.util.List;
 public class EtradeRepository {
 
     private final ObjectMapper objectMapper;
-    private final String SERVICE_NAME = "etrade";
 
     public EtradeRepository(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    /*
-        METHODS WITH GETTING ETRADE PRODUCTS.
-    */
-    public List<Product> getProductPage(int page, String token) throws IOException {
+    public List<EtradeProduct> getProductPage(int page, String token) throws IOException {
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
 
@@ -38,7 +34,7 @@ public class EtradeRepository {
 
         Response response = client.newCall(request).execute();
 
-        return objectMapper.readValue(response.body().string(), ProductCatalog.class).getResults();
+        return objectMapper.readValue(response.body().string(), EtradeProductCatalog.class).getResults();
     }
 
     public List<EtradeOrderProduct> getProductPageAndMapToEtradeProduct(int page, String token) throws IOException {
@@ -59,8 +55,8 @@ public class EtradeRepository {
         return objectMapper.readValue(response.body().string(), EtradeOrderProductCatalog.class).getResults();
     }
 
-    public List<Product> getProducts(String token) throws IOException {
-        List<Product> products = getProductPage(0, token);
+    public List<EtradeProduct> getProducts(String token) throws IOException {
+        List<EtradeProduct> products = getProductPage(0, token);
         for(int i=1; i<=6;i++){
             products.addAll(getProductPage(i, token));
         }
@@ -75,10 +71,7 @@ public class EtradeRepository {
         return products;
     }
 
-    /*
-        ETRADE ORDER-RELATED METHODS
-    */
-        public void createEtradeOrder(String token) throws IOException {
+        public void createEtradeOrder(String token, String items) throws IOException {
             OkHttpClient client = new OkHttpClient().newBuilder().build();
 
             MediaType mediaType = MediaType.parse("application/json");
@@ -98,16 +91,7 @@ public class EtradeRepository {
                             "                \"phone\": \"533331632\"\n" +
                             "            }\n" +
                             "        },\n" +
-                            "        \"items\": [\n" +
-                            "            {\n" +
-                            "                \"product\": \"Z28897\",\n" +
-                            "                \"count\": 1\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"product\": \"Z31145\",\n" +
-                            "                \"count\": 1\n" +
-                            "            }\n" +
-                            "        ]\n" +
+                            "        \"items\": " + items + "\n" +
                             "    }\n}");
 
             Request request = new Request.Builder()
@@ -120,4 +104,5 @@ public class EtradeRepository {
 
             Response response = client.newCall(request).execute();
         }
+
 }

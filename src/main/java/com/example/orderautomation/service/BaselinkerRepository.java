@@ -1,8 +1,8 @@
 package com.example.orderautomation.service;
 
-import com.example.orderautomation.model.products.BaselinkerOrder;
 import com.example.orderautomation.model.products.BaselinkerOrderCatalog;
 import com.example.orderautomation.model.products.BaselinkerOrderProduct;
+import com.example.orderautomation.model.products.BaselinkerOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
@@ -16,7 +16,6 @@ public class BaselinkerRepository {
 
     private final ObjectMapper objectMapper;
     private final Gson gson;
-    private final String SERVICE_NAME = "Baselinker";
 
     public BaselinkerRepository(ObjectMapper objectMapper, Gson gson) {
         this.objectMapper = objectMapper;
@@ -59,6 +58,7 @@ public class BaselinkerRepository {
         List<BaselinkerOrder> orders = getOrdersWithGivenStatus(statusId, token);
         List<BaselinkerOrderProduct> products = orders.get(0).getProducts();
 
+
         for (int i=1; i<orders.size(); i++){
             products.addAll(orders.get(i).getProducts());
         }
@@ -72,8 +72,8 @@ public class BaselinkerRepository {
                 .collect(Collectors.toList());
     }
 
-    public int getStatusIdFromOrder(String orderId, String token) throws IOException {
-        return getOrdersWithGivenId(orderId, token).get(0).getOrder_status_id();
+    public String getStatusIdFromOrder(String orderId, String token) throws IOException {
+        return String.valueOf(getOrdersWithGivenId(orderId, token).get(0).getOrder_status_id());
     }
 
 }

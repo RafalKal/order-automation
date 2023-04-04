@@ -1,6 +1,6 @@
-package com.example.orderautomation.model.products;
+package com.example.orderautomation.model.order;
 
-public class Product {
+public class EtradeProduct {
 
     private String id;
     private String name;

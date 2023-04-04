@@ -8,15 +8,13 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
-
     private String email;
     private String token;
 
     @OneToMany(mappedBy="user")
     private List<UserExternalSystemAuth> userAuths;
-
 
     public List<UserExternalSystemAuth> getUserAuths() {
         return userAuths;
